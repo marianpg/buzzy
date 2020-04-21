@@ -64,13 +64,13 @@ export class TemplateFileService {
                 break
         }
         const file = await this.readFile(filepath)
-        const templateFile = (new TemplateFile(this.databaseService, file)).build(parentFrontmatter)
+        const templateFile = (new TemplateFile(filepath, this.databaseService, file)).build(parentFrontmatter)
 
         return templateFile
     }
 
     async from(fileContent: string, parentFrontmatter: Frontmatter): Promise<TemplateFile> {
-        const templateFile = await (new TemplateFile(this.databaseService, fileContent)).build(parentFrontmatter)
+        const templateFile = await (new TemplateFile('from memory', this.databaseService, fileContent)).build(parentFrontmatter)
         return templateFile
     }
 }
@@ -82,6 +82,7 @@ export class TemplateFile {
     private markup: string
 
     constructor(
+        private name: string,
         private databaseService: DatabaseService,
         private file: string
     ) { }
@@ -120,5 +121,9 @@ export class TemplateFile {
 
     getMarkup(): string {
         return this.markup
+    }
+
+    getName(): string {
+        return this.name
     }
 }

@@ -51,6 +51,7 @@ export class RenderEngine {
     }
 
     private async _render(file: TemplateFile, contentHtml?: string): Promise<string> {
+        this.logging.info(`render ${file.getName()}`)
         const frontmatter = file.getFrontmatter()
 
         this.hbs.registerHelper('content', () => {
