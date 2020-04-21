@@ -27,6 +27,7 @@ import { isException, ExceptionType } from '../exception'
 import { Favicon } from '../response-service/favicon'
 
 
+// TODO: determine first request for a nicer logging and less frequent routes reloading
 export class Router {
     private logging: Logging
     private app: Express

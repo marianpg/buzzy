@@ -15,6 +15,8 @@ import { GlobalData } from '../../public/global'
 
 // import sequelize
 
+// TODO: yaml global.yaml should be possible
+
 // TODO: json and sqlite databases are possible
 // read from config which to choose and to deliver
 // ==> need for generic functions to open/save json and to run sql statements

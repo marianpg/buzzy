@@ -38,10 +38,14 @@ export class RoutesParser {
             return parseRoutes(json)
         }
         else if (await this.fileUtils.exist(this.routesDefinitionFilename.json)) {
-            const json = await this.fileUtils
-                .readJson<Record<string, any>[]>(
-                    this.routesDefinitionFilename.json)
-            return parseRoutes(json)
+            try {
+                const json = await this.fileUtils
+                    .readJson<Record<string, any>[]>(
+                        this.routesDefinitionFilename.json)
+                return parseRoutes(json)
+            } catch (err) {
+                throw new Error(`Fehler beim Einlesen der Routen-Definition: ${err.message}`)
+            }
         }
         if (this.config.magic) {
             return MagicRoutes
