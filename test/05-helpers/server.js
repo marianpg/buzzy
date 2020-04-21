@@ -5,6 +5,9 @@ const BuzzyServer = require('buzzy').server
 const config = {
     routing: {
         magic: true
+    },
+    templating: {
+        validation: false
     }
 }
 

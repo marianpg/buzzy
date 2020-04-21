@@ -44,11 +44,25 @@ export const DefaultConfig: Config = {
         logging: true
     },
     database: {
-        reloadOnEveryRequest: true,
-        globalFile: 'global.json',
-        path: 'data',
-        sqlite: false,
-        sqliteFilename: 'database.sqlite',
-        logging: true
+        globalData: {
+            active: true,
+            reloadOnEveryRequest: true,
+            pathToFile: './global.json',
+            format: FrontmatterType.JSON,
+            logging: true
+        },
+        fileData: {
+            active: false,
+            reloadOnEveryRequest: true,
+            path: './data',
+            format: FrontmatterType.JSON,
+            logging: true
+        },
+        sqliteData: {
+            active: false,
+            reloadOnEveryRequest: true,
+            pathToFile: './data/sqlite.db',
+            logging: true
+        }
     }
 }

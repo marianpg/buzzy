@@ -27,7 +27,7 @@ export class Application {
     private async buildServer(): Promise<void> {
         const databaseService = await new DatabaseService(
             this.config.database,
-            this.logService.create('database', this.config.database.logging),
+            this.logService,
             this.fileUtils
         ).build()
 

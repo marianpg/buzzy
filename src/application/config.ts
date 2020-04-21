@@ -104,12 +104,32 @@ const parseSessionsConfig = (toVerify: any, _default: SessionsConfig): SessionsC
 const parseDatabaseConfig = (toVerify: any, _default: DatabaseConfig): DatabaseConfig => {
     return isDefined(toVerify)
         ? {
-            reloadOnEveryRequest: decide(toVerify.reloadOnEveryRequest, _default.reloadOnEveryRequest),
-            globalFile: decide(toVerify.globalFile, _default.globalFile),
-            path: decide(toVerify.path, _default.path),
-            sqlite: decide(toVerify.sqlite, _default.sqlite),
-            sqliteFilename: decide(toVerify.sqliteFilename, _default.sqliteFilename),
-            logging: decide(toVerify.logging, _default.logging)
+            globalData: isDefined(toVerify.globalData)
+                ? {
+                    active: decide(toVerify.globalData.active, _default.globalData.active),
+                    reloadOnEveryRequest: decide(toVerify.globalData.reloadOnEveryRequest, _default.globalData.reloadOnEveryRequest),
+                    pathToFile: decide(toVerify.globalData.pathToFile, _default.globalData.pathToFile),
+                    format: decide(toVerify.globalData.format, _default.globalData.format),
+                    logging: decide(toVerify.globalData.logging, _default.globalData.logging)
+                }
+                : _default.globalData,
+            fileData: isDefined(toVerify.fileData)
+                ? {
+                    active: decide(toVerify.fileData.active, _default.fileData.active),
+                    reloadOnEveryRequest: decide(toVerify.fileData.reloadOnEveryRequest, _default.fileData.reloadOnEveryRequest),
+                    path: decide(toVerify.fileData.path, _default.fileData.path),
+                    format: decide(toVerify.fileData.format, _default.fileData.format),
+                    logging: decide(toVerify.fileData.logging, _default.fileData.logging)
+                }
+                : _default.fileData,
+            sqliteData: isDefined(toVerify.sqliteData)
+                ? {
+                    active: decide(toVerify.sqliteData.active, _default.sqliteData.active),
+                    reloadOnEveryRequest: decide(toVerify.sqliteData.reloadOnEveryRequest, _default.sqliteData.reloadOnEveryRequest),
+                    pathToFile: decide(toVerify.sqliteData.pathToFile, _default.sqliteData.pathToFile),
+                    logging: decide(toVerify.sqliteData.logging, _default.sqliteData.logging)
+                }
+                : _default.sqliteData,
         }
         : _default
 }

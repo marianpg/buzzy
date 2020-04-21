@@ -88,7 +88,6 @@ export class Router {
                 this.logRequest(request)
                 if (this.config.routing.reloadOnEveryRequest) {
                     await this.setup()
-                    this.logging.info('Routes reloaded')
                 }
                 this.expRouter(req, res, next)
             }

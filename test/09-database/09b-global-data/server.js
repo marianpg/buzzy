@@ -8,6 +8,14 @@ const config = {
     },
     templating: {
         validation: false
+    },
+    database: {
+        sqliteData: {
+            active: true
+        },
+        globalData: {
+            active: true
+        }
     }
 }
 

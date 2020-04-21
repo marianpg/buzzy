@@ -1,5 +1,5 @@
 {
-    "name": "07-controller",
+    "name": "03a-validation-active",
     "version": "1.0.0",
     "description": "",
     "main": "server.js",
@@ -11,6 +11,6 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "buzzy": "file:../.."
+        "buzzy": "file:../../.."
     }
 }

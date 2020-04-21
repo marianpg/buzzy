@@ -8,6 +8,9 @@ const config = {
     },
     sessions: {
         active: true
+    },
+    templating: {
+        validation: false
     }
 }
 
