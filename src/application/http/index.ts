@@ -45,7 +45,7 @@ export class Server {
             this.logService,
             this.fileUtils,
             this.responseService)
-        router.plugIn(this.app)
+        await router.plugIn(this.app)
     }
 
     async start(): Promise<void> {
