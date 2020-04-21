@@ -59,8 +59,13 @@ export class RenderEngine {
         })
 
         this.hbs.registerHelper('include', async (fname) => {
-            const templateHtml = await this._renderTemplate(fname, frontmatter)
-            return new this.hbs.SafeString(templateHtml)
+            if (isDefined(fname)) {
+                const templateHtml = await this._renderTemplate(fname, frontmatter)
+                return new this.hbs.SafeString(templateHtml)
+            } else {
+                this.logging.warn(`there is a include-helper without a specified filename in ${file.getName()}. Did you miss to put the filename in quotation marks, like in {{ include "fragment" }} ?`)
+                return ''
+            }
         })
 
         let templateName = null
