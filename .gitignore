@@ -1,6 +1,9 @@
 # gui
 .vscode
 
+# Documentation Build Data
+docs/build
+
 # Dependency directories
 node_modules/
 
