@@ -105,8 +105,10 @@ export class TemplateFile {
             this.validateFrontmatterType(fmatterType)
             this.frontmatter = await this.transformFrontmatter(fmatter, parentFrontmatter)
             this.markup = extraction[1]
-        } else {
+        } else if (extraction.length > 0) {
             this.markup = extraction[0]
+        } else {
+            this.markup = ''
         }
 
         return this

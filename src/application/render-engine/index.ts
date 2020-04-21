@@ -20,7 +20,6 @@ import { Validation } from '../validator'
 import { ErrorBannerTemplate } from './templates/error-banner-template.hbs'
 import { AnyErrorTemplate } from './templates/any-error-template.hbs'
 import { ValidationErrorTemplate } from './templates/validation-error-template.hbs'
-import { isException, RouteException } from '../exception'
 import { DatabaseService } from '../database'
 import { TemplateFileService, TemplateFile, TemplateType } from './template-file-service'
 
