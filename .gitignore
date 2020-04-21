@@ -14,6 +14,7 @@ node_modules/
 
 # build / generate output directory
 dist
+docs/build
 
 # development environment directory
 dev
