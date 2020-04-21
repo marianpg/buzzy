@@ -62,6 +62,7 @@ export class EmptySession implements ISession {
     save(_data: Record<string, any>): void { }
 }
 
+// TODO session-id should not contain local index
 export class SessionService {
 
     private session: ISession

@@ -43,7 +43,6 @@ export class RoutesParser {
                     this.routesDefinitionFilename.json)
             return parseRoutes(json)
         }
-
         if (this.config.magic) {
             return MagicRoutes
         } else {

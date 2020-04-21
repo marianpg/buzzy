@@ -97,10 +97,7 @@ export class DatabaseService {
     }
 
     async executeSql(sql: string, params: Record<string, any>): Promise<Record<string, any>[]> {
-        if (!this.config.sqlite) {
-            this.logging.info('Attempted execution of a SQL Statement, but "useSql" option in application configuration is deactivated. Statement has not been executed.')
-            return []
-        } else {
+        if (this.config.sqlite) {
             try {
                 return await this._executeSql(sql, params)
             } catch (e) {
@@ -109,13 +106,16 @@ export class DatabaseService {
             }
         }
     }
+
     private async loadSqlData(): Promise<void> {
-        const path = this.fileUtils.fullPath(this.config.sqliteFilename, this.config.path)
-        this.sqliteDatabase = new SqliteDatabase(path)//, { verbose: console.log }) //TODO: proper Logging
+        if (this.config.sqlite) {
+            const path = this.fileUtils.fullPath(this.config.sqliteFilename, this.config.path)
+            this.sqliteDatabase = new SqliteDatabase(path)//, { verbose: console.log }) //TODO: proper Logging
+        }
     }
 
     async parseAndExecuteSql(obj: Record<string, any>, params: Record<string, any>): Promise<Record<string, any>> {
-        if (!hasKeys(obj)) {
+        if (!this.config.sqlite || !hasKeys(obj)) {
             return obj
         }
 

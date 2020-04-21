@@ -36,7 +36,7 @@ export const DefaultConfig: Config = {
         logging: true
     },
     sessions: {
-        active: true,
+        active: false,
         path: 'sessions',
         logging: true
     },
