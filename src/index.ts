@@ -41,7 +41,7 @@ class FHWedelWeb implements FHWedelWebInterface {
             await this.app.start()
             this.logging.info('Application started successfully')
         } catch (err) {
-            this.logging.error('Application start failed')
+            this.logging.error('Application start failed', err)
         }
     }
 
@@ -50,7 +50,7 @@ class FHWedelWeb implements FHWedelWebInterface {
             await this.app.stop()
             this.logging.info('Application stopped successfully')
         } catch (err) {
-            this.logging.error('Application stop failed')
+            this.logging.error('Application stop failed', err)
         }
     }
 }
