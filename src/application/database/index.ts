@@ -49,7 +49,7 @@ export class DatabaseService {
     ) { }
 
     async build(): Promise<DatabaseService> {
-        this.load()
+        await this.load()
 
         return this
     }
