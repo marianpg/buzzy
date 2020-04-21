@@ -2,7 +2,7 @@
 
 import { Config } from '../public/config'
 
-import { LoggingService } from './logging'
+import { LoggingService, Logging } from './logging'
 import { FileUtils } from './filesystem-utils'
 
 import { Server } from './http'
@@ -23,17 +23,6 @@ export class Application {
         private logService: LoggingService,
         private fileUtils: FileUtils
     ) { }
-
-    async start(): Promise<void> {
-        await this.buildServer()
-        await this.startServer()
-    }
-
-    async stop(): Promise<void> {
-        if (this.server && this.server.listening) {
-            await this.server.close()
-        }
-    }
 
     private async buildServer(): Promise<void> {
         const databaseService = await new DatabaseService(
@@ -79,5 +68,16 @@ export class Application {
 
     private async startServer(): Promise<void> {
         await this.server.start()
+    }
+
+    async start(): Promise<void> {
+        await this.buildServer()
+        await this.startServer()
+    }
+
+    async stop(): Promise<void> {
+        if (this.server && this.server.listening) {
+            await this.server.close()
+        }
     }
 }
