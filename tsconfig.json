@@ -9,7 +9,8 @@
         "lib": [
             "es2020.string",
             "es2019.array",
-            "ES6"
+            "ES6",
+            "ESNext"
         ]
     },
     "include": [

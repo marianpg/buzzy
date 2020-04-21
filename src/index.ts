@@ -14,7 +14,7 @@ export interface FHWedelWebInterface {
 
 // TODO express.Router({ caseSensitive: true })
 // TODO CodeStyle (Spaces instead of Tabs)
-export class FHWedelWeb implements FHWedelWebInterface {
+class FHWedelWeb implements FHWedelWebInterface {
 
     private logging: Logging
     private config: Config
@@ -53,4 +53,8 @@ export class FHWedelWeb implements FHWedelWebInterface {
             this.logging.error('Application stop failed')
         }
     }
+}
+
+module.exports = {
+    server: FHWedelWeb
 }
