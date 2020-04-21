@@ -45,10 +45,10 @@ export class Router {
         const userAgent = request.headers['user-agent'] || ''
         const isUserAgent = userAgent.includes('fhw-web')
         const wantsFavicon = request.originalUrl.includes('favicon')
-
+        
         if (!isUserAgent && !wantsFavicon) {
             this.logging.data(
-                'Incoming Request',
+                'Incomming Request:',
                 request.method,
                 request.originalUrl,
                 jsonStringify(request.body)
@@ -75,6 +75,7 @@ export class Router {
         this.app = app
         this.app.use(async (req: ExpRequest, res: ExpResponse, next: ExpNextFunction) => {
             const request = parseRequest(req)
+            //TODO proper favicon handling
             if (request.originalUrl.endsWith('favicon.ico')) {
                 const favicon = Buffer.from(Favicon, 'base64')
                 res.writeHead(200, {
@@ -83,10 +84,11 @@ export class Router {
                 })
                 res.end(favicon)
             } else {
+                this.logRequest(request)
                 if (this.config.routing.reloadOnEveryRequest) {
                     await this.setup()
+                    this.logging.info('Routes reloaded')
                 }
-                this.logRequest(request)
                 this.expRouter(req, res, next)
             }
         })

@@ -39,7 +39,6 @@ export class HelpersRegistration {
     }
 
     async registerCustomHelpers(hbs: typeof Handlebars): Promise<void> {
-        const parser: ModuleExportsParser<Helper> = null
         const helpers = await this.moduleLoader.openModules(this.parseCustomHelpers, 'helpers')
         const collissionCheck = new CollisionCheck<string>()
         helpers.forEach(module => {

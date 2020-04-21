@@ -10,7 +10,7 @@ import { RoutingFileExtensions } from './routing-config'
 export const DefaultConfig: Config = {
     rootPath: process.cwd(),
     language: Languages.DE,
-    loggingActive: [LoggingTypes.INFO, LoggingTypes.WARN, LoggingTypes.ERROR],
+    loggingActive: [LoggingTypes.INFO, LoggingTypes.DATA, LoggingTypes.WARN, LoggingTypes.ERROR],
     server: {
         host: 'localhost',
         port: 8080,
@@ -33,6 +33,9 @@ export const DefaultConfig: Config = {
         },
         allowedExtensions: ['html', 'hbs'],
         frontmatterFormat: FrontmatterType.JSON,
+        helpers: {
+            reloadOnEveryRequest: true,
+        },
         logging: true
     },
     sessions: {

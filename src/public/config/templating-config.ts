@@ -10,8 +10,11 @@ export interface TemplatingConfig {
         templates: string
         helpers: string
         controller: string
-    },
+    }
     allowedExtensions: string[]
     frontmatterFormat: FrontmatterType
+    helpers: { 
+        reloadOnEveryRequest: boolean
+    }
     logging: boolean
 }

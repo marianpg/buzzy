@@ -81,6 +81,11 @@ const parseTemplatingConfig = (toVerify: any, _default: TemplatingConfig): Templ
                 : _default.paths,
             allowedExtensions: decide(toVerify.allowedExtensions, _default.allowedExtensions),
             frontmatterFormat: decide(toVerify.frontmatterFormat, _default.frontmatterFormat),
+            helpers: isDefined(toVerify.helpers)
+                ? {
+                    reloadOnEveryRequest: decide(toVerify.helpers.reloadOnEveryRequest, _default.helpers.reloadOnEveryRequest)
+                }
+                : _default.helpers,
             logging: decide(toVerify.logging, _default.logging)
         }
         : _default

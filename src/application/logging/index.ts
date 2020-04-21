@@ -6,11 +6,11 @@ import { LoggingTypes } from '../../public/config'
 const colors = require('colors')
 
 const themeConfig: Record<LoggingTypes, string> = {
-    info: 'green',
+    info: 'brightCyan',
     data: 'grey',
-    warn: 'yellow',
-    error: 'red',
-    debug: 'blue'
+    warn: 'brightYellow',
+    error: 'brightRed',
+    debug: 'brightBlue'
 }
 colors.setTheme(themeConfig)
 
@@ -26,7 +26,7 @@ export class Logging {
     protected log(type: LoggingTypes, ...args: any[]) {
         if (this.loggingActive.includes(type) && this.shouldLog) {
             let tag = `[${this.tag}]`
-            console.log(colors[type](tag), ...args)
+            console.log(colors[type](...[tag, ...args]))
         }
     }
 

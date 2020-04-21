@@ -40,14 +40,17 @@ export class RenderEngine {
     }
 
     async build(): Promise<RenderEngine> {
-        await this.setupRenderer()
+        this.hbs = promisedHandlebars(Handlebars)
+        this.helpers.registerGlobalHelpers(this.hbs)
+        await this.helpers.registerCustomHelpers(this.hbs)
+
         return this
     }
 
-    private async setupRenderer(): Promise<void> {
-        this.hbs = promisedHandlebars(Handlebars)
-        this.helpers.registerGlobalHelpers(this.hbs)
-        this.helpers.registerCustomHelpers(this.hbs)
+    async reloadRenderer(): Promise<void> {
+        if (this.config.helpers.reloadOnEveryRequest) {
+            await this.build()
+        }
     }
 
     private async _render(file: TemplateFile, contentHtml?: string): Promise<string> {
@@ -124,6 +127,7 @@ export class RenderEngine {
     }
 
     async renderAnyError(error: Error, html?: string): Promise<string> {
+        this.logging.warn('an error page will be rendered')
         const frontmatter: Frontmatter = FrontmatterService.From({
             global: {
                 error: {
@@ -147,6 +151,7 @@ export class RenderEngine {
     }
 
     async renderValidationError(validation: Validation, html: string): Promise<string> {
+        this.logging.warn('an error page will be rendered')
         const frontmatter: Frontmatter = FrontmatterService.From({
             global: { validation, clientHtml: html }
         })

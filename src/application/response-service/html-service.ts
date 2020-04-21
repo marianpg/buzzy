@@ -40,18 +40,12 @@ export class HtmlService {
         }
     }
 
-    private async shouldReloadRenderer(): Promise<void> {
-        if (this.config.reloadOnEveryRequest) {
-            await this.renderEngine.build()
-        }
-    }
-
     private parsePagePath(route: PageRoute, params: RequestParams): string {
         return determineFilepath(route.page, params)
     }
 
     async parsePage(ressource: string | PageRoute, globalData: GlobalData, request: RequestData, session: SessionData): Promise<string> {
-        await this.shouldReloadRenderer()
+        await this.renderEngine.reloadRenderer()
 
         const pagePath = typeof ressource === 'string'
             ? ressource
@@ -61,7 +55,7 @@ export class HtmlService {
     }
 
     async parseTemplate(ressource: string | PageRoute, globalData: GlobalData, request: RequestData, session: SessionData): Promise<string> {
-        await this.shouldReloadRenderer()
+        await this.renderEngine.reloadRenderer()
 
         const pagePath = typeof ressource === 'string'
             ? ressource
