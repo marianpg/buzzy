@@ -4,6 +4,10 @@
     --black: rgba(0,0,0,0.95);
 }
 
+not-existent {
+    broken: true
+}
+
 body {
     margin: 0;
     padding: 0;

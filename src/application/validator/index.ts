@@ -13,7 +13,7 @@ import { TransformValidation } from './transform-validation'
 
 export { Validation, NuValidation, ValidationResult } from './types'
 
-
+//TODO address the original line number in source file
 export class Validator {
     private cssParser: CssParser
     private transformer: TransformValidation
