@@ -42,6 +42,8 @@ import {
 import { isPromise } from '../helper'
 import { SessionService } from '../http'
 import { RouteException } from '../exception'
+import { FrontmatterService } from '../render-engine/frontmatter-service'
+import { Frontmatter } from '../../public/frontmatter'
 
 
 export class ResponseService {
@@ -75,7 +77,12 @@ export class ResponseService {
             const session: Session = await sessionService.getSession(request.originalUrl)
 
             if (isPageRoute(route)) {
-                response = await this.servePage(route, globalData, request, session.getData())
+                const frontmatter = FrontmatterService.From({
+                    request,
+                    global: globalData,
+                    session: session.getData()
+                })
+                response = await this.servePage(route, frontmatter)
             } else if (isControllerRoute(route)) {
                 response = await this.serveController(route, globalData, request, session)
             } else {
@@ -103,8 +110,8 @@ export class ResponseService {
         return { type: 'static', statusCode: 200, pathToFile: fullPath }
     }
 
-    async servePage(ressource: string | PageRoute, globalData: GlobalData, request: RequestData, session: SessionData): Promise<ResponseHtml> {
-        const pageHtml = await this.htmlService.parsePage(ressource, globalData, request, session)
+    async servePage(ressource: string | PageRoute, frontmatter: Frontmatter): Promise<ResponseHtml> {
+        const pageHtml = await this.htmlService.parsePage(ressource, frontmatter)
         const [valid, html] = await this.htmlService.validate(pageHtml)
         if (valid) {
             return { statusCode: 200, type: 'text/html', html }
@@ -113,8 +120,8 @@ export class ResponseService {
         }
     }
 
-    async serveFragment(ressource: string | PageRoute, globalData: GlobalData, request: RequestData, session: SessionData): Promise<ResponseHtml> {
-        const templateHtml = await this.htmlService.parseTemplate(ressource, globalData, request, session)
+    async serveFragment(ressource: string | PageRoute, frontmatter: Frontmatter): Promise<ResponseHtml> {
+        const templateHtml = await this.htmlService.parseTemplate(ressource, frontmatter)
         return { statusCode: 200, type: 'text/html', html: templateHtml }
     }
 
@@ -126,11 +133,30 @@ export class ResponseService {
         } else if (isRedirectResult(result)) {
             return { statusCode: result.status, type: 'redirect', redirectLocation: result.redirect }
         } else if (isPageResult(result)) {
-            return this.servePage(result.page, globalData, request, session)
+            const frontmatter = FrontmatterService.From({
+                request,
+                session,
+                global: globalData,
+                page: result.frontmatter
+            })
+            return this.servePage(result.page, frontmatter)
         } else if (isFragmentResult(result)) {
-            return this.serveFragment(result.fragment, globalData, request, session)
+            const frontmatter = FrontmatterService.From({
+                request,
+                session,
+                global: globalData,
+                page: result.frontmatter
+            })
+            return this.serveFragment(result.fragment, frontmatter)
         } else if (isPromise(result)) {
-            return this.processControllerResult(await result, globalData, request, session)
+            try {
+                console.log('############### 1', result)
+                const promiseResult = await Promise.resolve(result)
+                console.log('############### 2', promiseResult)
+                return this.processControllerResult(promiseResult, globalData, request, session)
+            } catch (err) {
+                throw new Error(`One of your controller rejected a promise: ${err})`)
+            }
         }
 
         // TODO: double check when this happens
@@ -144,11 +170,14 @@ export class ResponseService {
         }
 
         const database: Database = await this.databaseService.getDatabase()
-        const result = await this.controllerService.callController(route, global, request, session, database)
 
-        const response = this.processControllerResult(result, globalData, request, session.getData())
-        await this.databaseService.save()
-
-        return response
+        try {
+            const result = await this.controllerService.callController(route, global, request, session, database)
+            const response = this.processControllerResult(result, globalData, request, session.getData())
+            await this.databaseService.save()
+            return response
+        } catch (err) {
+            throw new Error(`Your controller (function "${route.controller.function}" in file "${route.controller.file}") threw the following error: ${err}`)
+        }
     }
 }

@@ -8,7 +8,7 @@ import { RequestData } from '../../public/request'
 import { Session } from '../../public/session'
 import { Database } from '../../public/database'
 
-import { isDefined, isFunction } from '../helper'
+import { isDefined, isFunction, isAsyncFunction } from '../helper'
 
 import { Logging } from '../logging'
 import { FileUtils, ModuleLoader, DynamicModule } from '../filesystem-utils'
@@ -33,7 +33,7 @@ export const isFragmentResult = (result: ControllerResult): result is FragmentRe
 
 export const parseControllerFunction = (_exports: Record<string, any>): Record<string, ControllerFunction> => {
     Object.keys(_exports).forEach(name => {
-        if (!isFunction(_exports[name])) {
+        if (!isFunction(_exports[name]) && !isAsyncFunction(_exports[name])) {
             throw new Error(`Controller Function "${name}" is not a correctly declared function. Please read the docs.`)
         }
     })
@@ -69,7 +69,14 @@ export class ControllerService {
         const controller = this.allController.find(({ name }) => {
             return this.fileUtils.parseFilename(name) === route.controller.file
         })
+        if (!isDefined(controller)) {
+            throw new Error(`Can not find Controller File "${route.controller.file}"`)
+        }
+
         const _function = controller._exports[route.controller.function]
+        if (!isDefined(_function)) {
+            throw new Error(`Can not call function "${route.controller.function}" in Controller File "${route.controller.file}". Did you forget to export or to define the function?`)
+        }
 
         return _function(global, request, session, database)
     }

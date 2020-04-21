@@ -94,14 +94,12 @@ export class RenderEngine {
         return this._render(file, contentHtml)
     }
 
-    async renderTemplate(filePath: string, global: GlobalData, request: RequestData, session: SessionData): Promise<string> {
-        const frontmatter = FrontmatterService.From({ global, request, session })
+    async renderTemplate(filePath: string, frontmatter: Frontmatter): Promise<string> {
         const file = await this.templateFileService.build(filePath, TemplateType.TEMPLATE, frontmatter)
         return this._render(file)
     }
 
-    async renderPage(filePath: string, global: GlobalData, request: RequestData, session: SessionData): Promise<string> {
-        const frontmatter = FrontmatterService.From({ global, request, session })
+    async renderPage(filePath: string, frontmatter: Frontmatter): Promise<string> {
         const file = await this.templateFileService.build(filePath, TemplateType.PAGE, frontmatter)
         return this._render(file)
     }

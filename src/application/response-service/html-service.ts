@@ -13,6 +13,7 @@ import { FileUtils } from '../filesystem-utils'
 import { RenderEngine } from '../render-engine'
 import { Validator } from '../validator'
 import { determineFilepath } from '../route'
+import { Frontmatter } from '../../public/frontmatter'
 
 
 export class HtmlService {
@@ -44,23 +45,23 @@ export class HtmlService {
         return determineFilepath(route.page, params)
     }
 
-    async parsePage(ressource: string | PageRoute, globalData: GlobalData, request: RequestData, session: SessionData): Promise<string> {
+    async parsePage(ressource: string | PageRoute, frontmatter: Frontmatter): Promise<string> {
         await this.renderEngine.reloadRenderer()
 
         const pagePath = typeof ressource === 'string'
             ? ressource
-            : this.parsePagePath(ressource, request.params)
+            : this.parsePagePath(ressource, frontmatter.request.params)
 
-        return await this.renderEngine.renderPage(pagePath, globalData, request, session)
+        return await this.renderEngine.renderPage(pagePath, frontmatter)
     }
 
-    async parseTemplate(ressource: string | PageRoute, globalData: GlobalData, request: RequestData, session: SessionData): Promise<string> {
+    async parseTemplate(ressource: string | PageRoute, frontmatter: Frontmatter): Promise<string> {
         await this.renderEngine.reloadRenderer()
 
         const pagePath = typeof ressource === 'string'
             ? ressource
-            : this.parsePagePath(ressource, request.params)
+            : this.parsePagePath(ressource, frontmatter.request.params)
 
-        return await this.renderEngine.renderTemplate(pagePath, globalData, request, session)
+        return await this.renderEngine.renderTemplate(pagePath, frontmatter)
     }
 }

@@ -14,6 +14,10 @@ export const isFunction = (functionToCheck) => {
     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]'
 }
 
+export const isAsyncFunction = (functionToCheck) => {
+    return functionToCheck && functionToCheck.constructor.name === "AsyncFunction"
+}
+
 export const isPromise = (p?: any) => isDefined(p) && isDefined(p.then) && isFunction(p.then)
 
 export const hasKeys = (v: any) => typeof v === 'object' && v !== null
