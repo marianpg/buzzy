@@ -7,14 +7,14 @@ import { LoggingService, Logging } from './application/logging'
 import { Application } from './application'
 import { FileUtils } from './application/filesystem-utils'
 
-export interface FHWedelWebInterface {
+export interface BuzzyInterface {
     start(): Promise<void>
     stop(): Promise<void>
 }
 
 // TODO express.Router({ caseSensitive: true })
 // TODO CodeStyle (Spaces instead of Tabs)
-class FHWedelWeb implements FHWedelWebInterface {
+class Buzzy implements BuzzyInterface {
 
     private logging: Logging
     private config: Config
@@ -55,6 +55,6 @@ class FHWedelWeb implements FHWedelWebInterface {
     }
 }
 
-module.exports = {
-    server: FHWedelWeb
-}
+export default Buzzy
+module.exports = Buzzy
+module.exports.default = Buzzy

@@ -1,5 +1,5 @@
 # gui
-.vscode
+.vscode/
 
 # Dependency directories
 node_modules/
@@ -10,7 +10,7 @@ node_modules/
 .env.test
 
 # build / generate output directory
-dist
+dist/
 
 # development environment directory
-dev
+dev/

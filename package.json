@@ -3,7 +3,9 @@
     "version": "1.0.0",
     "description": "A modular web server for rapid full-stack development.",
     "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "scripts": {
+        "prepublish": "tsc",
         "tsc": "tsc",
         "build": "tsc",
         "dev": "ts-node-dev --respawn --transpileOnly ./dev/index.ts",

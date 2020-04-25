@@ -1,0 +1,6 @@
+.vscode/
+dev/
+docs/
+src/
+test/
+.gitignore
