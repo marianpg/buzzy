@@ -6,6 +6,7 @@ import { RouteException } from "../exception"
 import { Frontmatter, PageData, FrontmatterType } from "../../public/frontmatter"
 import { DatabaseService } from "../database"
 import { FrontmatterService } from "./frontmatter-service"
+import { isDefined } from "../helper"
 
 export enum TemplateType {
     PAGE,
@@ -93,13 +94,48 @@ export class TemplateFile {
 
     private async transformFrontmatter(fmatter: Frontmatter, parent: Frontmatter): Promise<Frontmatter> {
         const fmatterMerged = FrontmatterService.Merge(parent, fmatter)
-        return await this.databaseService.parseAndExecuteSql(fmatter, fmatterMerged) as Frontmatter
+        const params = {
+            ...fmatterMerged.global,
+            ...fmatterMerged.session,
+            ...fmatterMerged.page,
+            ...fmatterMerged.request
+        }
+        
+        return await this.databaseService.parseAndExecuteSql(fmatter, params) as Frontmatter
     }
 
+
     async build(parentFrontmatter: Frontmatter): Promise<TemplateFile> {
+        // TODO check this.file != null
+        this.parentFrontmatter = parentFrontmatter
+
+        const fmatterRegex = /(?:---)([\s\S]*?)(?:---)/g
+        let matching = fmatterRegex.exec(this.file)
+
+        if (matching) { // frontmatter there
+            const [ _, rawFmatter ] = matching
+            const [fmatter, fmatterType] = FrontmatterService.FromRawString(rawFmatter.trim())
+            this.validateFrontmatterType(fmatterType)
+            this.frontmatter = await this.transformFrontmatter(fmatter, parentFrontmatter)            
+            
+            const markupRegex = /(?:---[\s\S]*?---)([\s\S]*)/g
+            matching = markupRegex.exec(this.file)
+            if (matching) {
+                const [ _, rawMarkup ] = matching
+                this.markup = rawMarkup.trim()
+            } else {
+                this.markup = ''
+            }
+        } else { // no frontmatter
+            this.markup = this.file.trim()
+        }
+        
+        return this
+    }
+
+    async buildOld(parentFrontmatter: Frontmatter): Promise<TemplateFile> {
         this.parentFrontmatter = parentFrontmatter
         const extraction = this.file.split('---').map(str => str.trim()).filter(str => str.length > 0)
-
         if (extraction.length > 1) {
             const rawFrontmatter = extraction[0]
             const [fmatter, fmatterType] = FrontmatterService.FromRawString(rawFrontmatter)

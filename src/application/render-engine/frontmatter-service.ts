@@ -68,17 +68,24 @@ export class FrontmatterService {
         }
     }
 
+    //  TODO result type and actual value are not matching everytime
     static FromRawString(raw: string): [Frontmatter, FrontmatterType] {
+        let error = null
+
         try {
             const asJson = parseJson(raw)
             return [asJson, FrontmatterType.JSON]
-        } catch (_) { }
+        } catch (err) {
+            error = err
+        }
 
         try {
             const asYaml = parseYaml(raw)
             return [asYaml, FrontmatterType.YAML]
         } catch (_) { }
 
-        throw new Error('Invalid Frontmatter-Format!')
+        // TODO: determine whenever json or yaml is requested and print the corresponding error output, if present
+        // TODO: provide a link to a json or yaml online parser with beautiful error recognition
+        throw new Error(`Invalid Frontmatter-Format: ${error}`)
     }
 }

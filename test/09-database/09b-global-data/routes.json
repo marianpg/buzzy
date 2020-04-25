@@ -1,16 +1,6 @@
 [
     {
-        "url": "/list",
-        "controller": {
-            "file": "data",
-            "function": "list"
-        }
-    },
-    {
-        "url": "/add",
-        "controller": {
-            "file": "data",
-            "function": "add"
-        }
+        "url": "*",
+        "page":"*"
     }
 ]

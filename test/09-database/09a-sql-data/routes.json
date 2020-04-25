@@ -1,5 +1,9 @@
 [
     {
+        "url": "/",
+        "page":"index"
+    },
+    {
         "url": "/list",
         "controller": {
             "file": "data",
@@ -11,6 +15,13 @@
         "controller": {
             "file": "data",
             "function": "add"
+        }
+    },
+    {
+        "url": "/delete",
+        "controller": {
+            "file": "data",
+            "function": "delete"
         }
     }
 ]

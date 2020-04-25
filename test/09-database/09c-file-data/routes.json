@@ -1,6 +1,6 @@
 [
     {
-        "url": "/list",
+        "url": "/",
         "controller": {
             "file": "data",
             "function": "list"

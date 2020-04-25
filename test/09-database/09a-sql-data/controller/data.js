@@ -1,29 +1,40 @@
 'use strict'
 
 module.exports = {
-    list: (global, request, session, database) => {
+    list: async (global, request, session, database) => {
+        const persons = await database.executeSql('SELECT * FROM persons;')
+
         return {
             status: 200,
-            json: {
-                id: session.getId(),
-                meta: session.getMeta(),
-                data: session.getData()
+            page: 'index',
+            frontmatter: {
+                'ctrl-persons': persons
             }
         }
     },
-    add: (global, request, session, database) => {
-        const data = session.getData()
-        data.randoms = data.randoms ? data.randoms : []
-        data.randoms.push(Math.random())
-
-        session.save(data)
-
+    add: async (global, request, session, database) => {
+        const firstname = request.query.firstname || 'Max'
+        const lastname = request.query.lastname || 'Von Controller'
+        await database.executeSql(`INSERT INTO persons (firstname, lastname) VALUES ('${firstname}', '${lastname}');`)
+        const persons = await database.executeSql('SELECT * FROM persons;')
+        
         return {
             status: 200,
-            json: {
-                id: session.getId(),
-                meta: session.getMeta(),
-                data: session.getData()
+            page: 'index',
+            frontmatter: {
+                'ctrl-persons': persons
+            }
+        }
+    },
+    delete: async (global, request, session, database) => {
+        await database.executeSql(`DELETE FROM persons;`)
+        const persons = await database.executeSql('SELECT * FROM persons;')
+        
+        return {
+            status: 200,
+            page: 'index',
+            frontmatter: {
+                'ctrl-persons': persons
             }
         }
     }

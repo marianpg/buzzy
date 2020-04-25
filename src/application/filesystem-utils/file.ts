@@ -126,9 +126,10 @@ export class FileUtils {
     }
 
     async writeJson(content: any, filename: string, relativePath?: string): Promise<void> {
+        filename = filename.endsWith('.json') ? filename : `${filename}.json`
         try {
             const json = JSON.stringify(content, null, 4)
-            await this.writeFile({ encoding: 'utf8' }, json, `${filename}.json`, relativePath)
+            await this.writeFile({ encoding: 'utf8' }, json, filename, relativePath)
         } catch (err) {
             throw new Error(`Could not write json file: ${err}`)
         }

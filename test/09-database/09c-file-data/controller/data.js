@@ -2,28 +2,31 @@
 
 module.exports = {
     list: (global, request, session, database) => {
+        const persons = database.loadJson('persons.json') || []
+
         return {
             status: 200,
-            json: {
-                id: session.getId(),
-                meta: session.getMeta(),
-                data: session.getData()
+            page: 'index',
+            frontmatter: {
+                persons
             }
         }
     },
     add: (global, request, session, database) => {
-        const data = session.getData()
-        data.randoms = data.randoms ? data.randoms : []
-        data.randoms.push(Math.random())
+        const persons = database.loadJson('persons') || []
+        const person = {
+            firstname: "Marie",
+            lastname: "Schmidt"
+        }
 
-        session.save(data)
+        persons.push(person)
+        database.saveJson('persons', persons)
 
         return {
             status: 200,
-            json: {
-                id: session.getId(),
-                meta: session.getMeta(),
-                data: session.getData()
+            page: 'index',
+            frontmatter: {
+                persons
             }
         }
     }

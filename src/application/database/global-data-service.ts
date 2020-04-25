@@ -28,7 +28,6 @@ export class GlobalDataService {
             ? await this.fileUtils.readJson<GlobalData>(this.config.pathToFile)
             : {}
 
-        // TODO execute sql
         this.data = this.sqlDataService.parseAndExecuteSql(this.data, {})
     }
 

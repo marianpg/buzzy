@@ -150,9 +150,7 @@ export class ResponseService {
             return this.serveFragment(result.fragment, frontmatter)
         } else if (isPromise(result)) {
             try {
-                console.log('############### 1', result)
                 const promiseResult = await Promise.resolve(result)
-                console.log('############### 2', promiseResult)
                 return this.processControllerResult(promiseResult, globalData, request, session)
             } catch (err) {
                 throw new Error(`One of your controller rejected a promise: ${err})`)
@@ -169,8 +167,12 @@ export class ResponseService {
             this.controllerService = await this.controllerService.build()
         }
 
-        const database: Database = await this.databaseService.getDatabase()
-
+        const frontmatter = FrontmatterService.From({
+            global: globalData,
+            request
+        })
+        const database: Database = await this.databaseService.getDatabase(frontmatter)
+        
         try {
             const result = await this.controllerService.callController(route, global, request, session, database)
             const response = this.processControllerResult(result, globalData, request, session.getData())

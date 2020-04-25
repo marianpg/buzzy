@@ -40,14 +40,13 @@ export class SqlDataService {
     }
 
     private async _executeSql(sql: string, params: Record<string, any>): Promise<Record<string, any>[]> {
-        const data = Object.assign({}, params.page, params.request.params, params.request.query, params.request.body)
         const stmt = this.sqliteDatabase.prepare(sql)
         let result = []
 
         if (sql.trimLeft().toUpperCase().startsWith('SELECT')) {
-            result = stmt.all(data)
+            result = stmt.all(params)
         } else {
-            result = [stmt.run(data)]
+            result = [stmt.run(params)]
         }
 
         return result
@@ -55,12 +54,7 @@ export class SqlDataService {
 
     async query(sql: string, params: Record<string, any>): Promise<Record<string, any>[]> {
         if (this.config.active) {
-            try {
-                return await this._executeSql(sql, params)
-            } catch (err) {
-                this.logging.error('SQL Error', err)
-                return [{ message: 'SQL Error', error: err }]
-            }
+            return await this._executeSql(sql, params)
         } else {
             return []
         }
