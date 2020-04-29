@@ -4,3 +4,5 @@ docs/
 src/
 test/
 .gitignore
+jest.config.js
+tsconfig.json

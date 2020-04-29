@@ -9,6 +9,7 @@ import { CssParser } from './css-parser'
 import { Regex } from './regex'
 import { ReferencedCss, Validation } from './types'
 import { TransformValidation } from './transform-validation'
+import { isDefined } from '../helper'
 
 
 export { Validation, NuValidation, ValidationResult } from './types'
@@ -65,7 +66,7 @@ export class Validator {
     }
 
     async validate(html: string): Promise<Validation> {
-        return this.config.validation
+        return this.config.validation && isDefined(html) && (typeof html === 'string')
             ? await this._validate(html)
             : { results: [], html }
     }

@@ -1,6 +1,6 @@
 {
     "name": "buzzy",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "A modular web server for rapid full-stack development.",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -26,8 +26,7 @@
         "jest": "^25.2.4",
         "mocha": "^7.1.1",
         "ts-jest": "^25.3.0",
-        "ts-node-dev": "^1.0.0-pre.44",
-        "typescript": "^3.8.3"
+        "ts-node-dev": "^1.0.0-pre.44"
     },
     "dependencies": {
         "axios": "^0.19.2",
@@ -40,6 +39,20 @@
         "sqlite3": "^4.1.1",
         "url": "^0.11.0",
         "uuid": "^7.0.2",
-        "yaml": "^1.9.2"
-    }
+        "yaml": "^1.9.2",
+        "typescript": "^3.8.3"
+    },
+    "directories": {
+        "doc": "docs",
+        "test": "test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/marianpg/buzzy.git"
+    },
+    "keywords": [],
+    "bugs": {
+        "url": "https://github.com/marianpg/buzzy/issues"
+    },
+    "homepage": "https://github.com/marianpg/buzzy#readme"
 }
