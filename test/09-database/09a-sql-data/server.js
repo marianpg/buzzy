@@ -1,6 +1,6 @@
 'use strict'
 
-const BuzzyServer = require('buzzy').server
+const BuzzyServer = require('buzzy')
 
 const config = {
     routing: {
