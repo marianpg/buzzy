@@ -116,8 +116,7 @@ export class TemplateFile {
             const [ _, rawFmatter ] = matching
             const [fmatter, fmatterType] = FrontmatterService.FromRawString(rawFmatter.trim())
             this.validateFrontmatterType(fmatterType)
-            this.frontmatter = await this.transformFrontmatter(fmatter, parentFrontmatter)            
-            
+            this.frontmatter = await this.transformFrontmatter(fmatter, parentFrontmatter)
             const markupRegex = /(?:---[\s\S]*?---)([\s\S]*)/g
             matching = markupRegex.exec(this.file)
             if (matching) {
@@ -130,24 +129,6 @@ export class TemplateFile {
             this.markup = this.file.trim()
         }
         
-        return this
-    }
-
-    async buildOld(parentFrontmatter: Frontmatter): Promise<TemplateFile> {
-        this.parentFrontmatter = parentFrontmatter
-        const extraction = this.file.split('---').map(str => str.trim()).filter(str => str.length > 0)
-        if (extraction.length > 1) {
-            const rawFrontmatter = extraction[0]
-            const [fmatter, fmatterType] = FrontmatterService.FromRawString(rawFrontmatter)
-            this.validateFrontmatterType(fmatterType)
-            this.frontmatter = await this.transformFrontmatter(fmatter, parentFrontmatter)
-            this.markup = extraction[1]
-        } else if (extraction.length > 0) {
-            this.markup = extraction[0]
-        } else {
-            this.markup = ''
-        }
-
         return this
     }
 
