@@ -96,5 +96,6 @@ export class DatabaseService {
 
     async save(): Promise<void> {
         await this.fileDataService.save()
+        await this.sqlDataService.save()
     }
 }

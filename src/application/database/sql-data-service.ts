@@ -3,17 +3,19 @@
 import { SqlDataConfig } from "../../public/config/database-config"
 import { Database as IDatabase, ResultType, AllResultTypes } from "../../public/database"
 
-const SqliteDatabase = require('sqlite3')
+const InitSqlJs = require('sql.js')
 const escapeSqlString = require('sql-string-escape')
 
 import { Logging } from "../logging"
 import { FileUtils } from "../filesystem-utils"
 import { hasKeys, isDefined } from "../helper"
 
-enum SqlQueryType {
-    GET, // like Select
-    POST // like Insert, Delete, Create, etc.
-}
+type SqlDriverResult = {
+    columns: string[],
+    values: any[][]
+}[]
+
+type SqlResult = Record<string, any>[]
 
 export class SqlDataService {
 
@@ -26,22 +28,11 @@ export class SqlDataService {
     ) { }
 
     private async _build(): Promise<void> {
-        return new Promise(
-            (resolve, reject) => {
-                const path = this.fileUtils.fullPath(this.config.pathToFile)
-                //TODO: proper Logging
-                this.sqliteDatabase = new SqliteDatabase.Database(
-                    path,
-                    SqliteDatabase.OPEN_CREATE | SqliteDatabase.OPEN_READWRITE,
-                    err => {
-                        if (err) {
-                            reject(err)
-                        } else {
-                            resolve()
-                        }
-                })
-            }
-        )
+        const dataPath = this.fileUtils.fullPath(this.config.pathToFile)
+
+        const SQL = await InitSqlJs();
+        const filebuffer = await this.fileUtils.readBuffer(dataPath)
+        this.sqliteDatabase = new SQL.Database(filebuffer)
     }
 
     async build(): Promise<SqlDataService> {
@@ -81,7 +72,7 @@ export class SqlDataService {
         return result
     }
 
-    private prepareSql(sql: string, params: Record<string, any>): [string, SqlQueryType] {
+    private prepareSql(sql: string, params: Record<string, any>): string {
         const flattenedParams = this.flattenParams(params)        
         const paramsRegex = /(([:@$])([\w\d]*))/g
         
@@ -97,36 +88,44 @@ export class SqlDataService {
             sql
         )
 
-        return [ preparedSql, SqlQueryType.GET ]
+        return preparedSql
     }
 
-    private async _executeSql(sql: string, params: Record<string, any>): Promise<Record<string, any>[]> {
-        return new Promise(
-            (resolve, reject) => {
-                const [ preparedSql, type ] = this.prepareSql(sql, params)
+    private convertSqlResult(result: SqlDriverResult): SqlResult {
+        if (isDefined(result) && isDefined(result[0])
+            && isDefined(result[0].columns) && isDefined(result[0].values)
+        ) {
+            const columns = result[0].columns
+            const values = result[0].values
+            
+            return values.map(
+                row => {
+                    return row.reduce(
+                        (acc, val, idx) => ({
+                            ...acc,
+                            [columns[idx]]: val
+                        }), {}
+                    )
+                })
+        } else {
+            return []
+        }
+    }
 
-                const result = (err, rows) => {
-                    if (err) {
-                        reject(err)
-                    } else if (rows && rows.length > 0) {
-                        resolve(rows)
-                    } else {
-                        resolve()
-                    }
-                }
-                if (type === SqlQueryType.GET) {
-                    this.sqliteDatabase.all(preparedSql, result)
-                } else { //SqlQueryType.POST
-                    this.sqliteDatabase.run(preparedSql, result)
-                }
-            }
-        )
+    private _executeSql(sql: string, params: Record<string, any>): SqlResult {
+        const preparedSql = this.prepareSql(sql, params)
+        try {
+            const sqlDriverResult: SqlDriverResult = this.sqliteDatabase.exec(preparedSql)
+            return this.convertSqlResult(sqlDriverResult)
+        } catch (err) {
+            throw new Error(`SQL Error: ${err}`)
+        }
     }
     
 
-    async query(sql: string, params: Record<string, any>): Promise<Record<string, any>[]> {
+    async query(sql: string, params: Record<string, any>): Promise<SqlResult> {
         if (this.config.active) {
-            return await this._executeSql(sql, params)
+            return this._executeSql(sql, params)
         } else {
             return []
         }
@@ -170,5 +169,12 @@ export class SqlDataService {
         const mixedResult = Object.assign([], sqlResult, objResult)
         
         return mixedResult
+    }
+
+    async save(): Promise<void> {
+        const dataPath = this.fileUtils.fullPath(this.config.pathToFile)
+        const data = this.sqliteDatabase.export()
+        const buffer = Buffer.from(data)
+        await this.fileUtils.writeBuffer(buffer, dataPath)
     }
 }

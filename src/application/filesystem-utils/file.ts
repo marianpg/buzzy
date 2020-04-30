@@ -11,6 +11,8 @@ import { Logging } from '../logging'
 
 export { WriteFileOptions } from 'fs'
 
+
+//TODO better file-type organization.
 export class FileUtils {
 
     constructor(
@@ -112,6 +114,15 @@ export class FileUtils {
             return JSON.parse(content) as T
         } catch (err) {
             throw new Error(`Could not convert to json: ${err}`)
+        }
+    }
+
+    async writeBuffer(content: Buffer, filename: string, relativePath?: string): Promise<void> {
+        const fullPath = this.fullPath(filename, relativePath)
+        try {
+            await fsp.writeFile(fullPath, content)
+        } catch (err) {
+            throw new Error(`Could not write buffer-file: ${err}`)
         }
     }
 

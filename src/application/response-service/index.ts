@@ -90,6 +90,7 @@ export class ResponseService {
                 response = { type: 'empty', statusCode: 200 }
             }
             await sessionService.closeSession()
+            await this.databaseService.save()
         }
 
         return response
@@ -176,7 +177,6 @@ export class ResponseService {
         try {
             const result = await this.controllerService.callController(route, global, request, session, database)
             const response = this.processControllerResult(result, globalData, request, session.getData())
-            await this.databaseService.save()
             return response
         } catch (err) {
             throw new Error(`Your controller (function "${route.controller.function}" in file "${route.controller.file}") threw the following error: ${err}`)
