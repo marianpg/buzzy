@@ -3,12 +3,17 @@
 import { SqlDataConfig } from "../../public/config/database-config"
 import { Database as IDatabase, ResultType, AllResultTypes } from "../../public/database"
 
-const SqliteDatabase = require('better-sqlite3')
+const SqliteDatabase = require('sqlite3')
+const escapeSqlString = require('sql-string-escape')
 
 import { Logging } from "../logging"
 import { FileUtils } from "../filesystem-utils"
 import { hasKeys, isDefined } from "../helper"
 
+enum SqlQueryType {
+    GET, // like Select
+    POST // like Insert, Delete, Create, etc.
+}
 
 export class SqlDataService {
 
@@ -21,9 +26,22 @@ export class SqlDataService {
     ) { }
 
     private async _build(): Promise<void> {
-        const path = this.fileUtils.fullPath(this.config.pathToFile)
-        //TODO: proper Logging
-        this.sqliteDatabase = new SqliteDatabase(path)//, { verbose: console.log })
+        return new Promise(
+            (resolve, reject) => {
+                const path = this.fileUtils.fullPath(this.config.pathToFile)
+                //TODO: proper Logging
+                this.sqliteDatabase = new SqliteDatabase.Database(
+                    path,
+                    SqliteDatabase.OPEN_CREATE | SqliteDatabase.OPEN_READWRITE,
+                    err => {
+                        if (err) {
+                            reject(err)
+                        } else {
+                            resolve()
+                        }
+                })
+            }
+        )
     }
 
     async build(): Promise<SqlDataService> {
@@ -39,18 +57,72 @@ export class SqlDataService {
         }
     }
 
-    private async _executeSql(sql: string, params: Record<string, any>): Promise<Record<string, any>[]> {
-        const stmt = this.sqliteDatabase.prepare(sql)
-        let result = []
-
-        if (sql.trimLeft().toUpperCase().startsWith('SELECT')) {
-            result = stmt.all(params)
-        } else {
-            result = [stmt.run(params)]
+    private flattenParams(p: Record<string, any>): Record<string, string> {
+        const result: Record<string, string> = {}
+    
+        type Strategy = (obj: Record<string, any>, key: string, result: Record<string, string>) => void
+        const strategy: Strategy = (obj, key, result) => {
+            if (!hasKeys(obj[key])) {
+                result[key] = obj[key]
+            }
         }
-
+    
+        const iterate = (obj: Record<string, any>, strategy: Strategy, result: Record<string, string>): void => {
+            if (hasKeys(obj)) {
+                Object.keys(obj).forEach(key => {
+                    strategy(obj, key, result)
+                    iterate(obj[key], strategy, result)
+                })
+            }
+        }
+    
+        iterate(p, strategy, result)
+    
         return result
     }
+
+    private prepareSql(sql: string, params: Record<string, any>): [string, SqlQueryType] {
+        const flattenedParams = this.flattenParams(params)        
+        const paramsRegex = /(([:@$])([\w\d]*))/g
+        
+        const preparedSql = Array.from(sql.matchAll(paramsRegex)).reduce(
+            (acc, [_, match, prefix, name]) => {
+                const replacement = flattenedParams[name]
+                if (isDefined(replacement)) {
+                    return acc.replace(match, escapeSqlString(replacement))
+                } else {
+                    throw new Error(`SQL: Can not execute SQL statement. No parameter defined for ${match}.`)
+                }
+            },
+            sql
+        )
+
+        return [ preparedSql, SqlQueryType.GET ]
+    }
+
+    private async _executeSql(sql: string, params: Record<string, any>): Promise<Record<string, any>[]> {
+        return new Promise(
+            (resolve, reject) => {
+                const [ preparedSql, type ] = this.prepareSql(sql, params)
+
+                const result = (err, rows) => {
+                    if (err) {
+                        reject(err)
+                    } else if (rows && rows.length > 0) {
+                        resolve(rows)
+                    } else {
+                        resolve()
+                    }
+                }
+                if (type === SqlQueryType.GET) {
+                    this.sqliteDatabase.all(preparedSql, result)
+                } else { //SqlQueryType.POST
+                    this.sqliteDatabase.run(preparedSql, result)
+                }
+            }
+        )
+    }
+    
 
     async query(sql: string, params: Record<string, any>): Promise<Record<string, any>[]> {
         if (this.config.active) {
@@ -95,8 +167,8 @@ export class SqlDataService {
         if (resultType === 'object') {
             return objResult
         }
-
-        const mixedResult = Object.assign(sqlResult, objResult)
+        const mixedResult = Object.assign([], sqlResult, objResult)
+        
         return mixedResult
     }
 }

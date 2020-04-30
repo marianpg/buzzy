@@ -30,17 +30,17 @@
     },
     "dependencies": {
         "axios": "^0.19.2",
-        "better-sqlite3": "^6.0.1",
         "colors": "^1.4.0",
         "cookie-parser": "^1.4.5",
         "express": "^4.17.1",
         "handlebars": "^4.7.3",
         "promised-handlebars": "^2.0.1",
+        "sql-string-escape": "^1.1.6",
         "sqlite3": "^4.1.1",
+        "typescript": "^3.8.3",
         "url": "^0.11.0",
         "uuid": "^7.0.2",
-        "yaml": "^1.9.2",
-        "typescript": "^3.8.3"
+        "yaml": "^1.9.2"
     },
     "directories": {
         "doc": "docs",
