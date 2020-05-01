@@ -50,14 +50,14 @@ export class SqlDataService {
 
     private flattenParams(p: Record<string, any>): Record<string, string> {
         const result: Record<string, string> = {}
-    
+
         type Strategy = (obj: Record<string, any>, key: string, result: Record<string, string>) => void
         const strategy: Strategy = (obj, key, result) => {
             if (!hasKeys(obj[key])) {
                 result[key] = obj[key]
             }
         }
-    
+
         const iterate = (obj: Record<string, any>, strategy: Strategy, result: Record<string, string>): void => {
             if (hasKeys(obj)) {
                 Object.keys(obj).forEach(key => {
@@ -66,16 +66,16 @@ export class SqlDataService {
                 })
             }
         }
-    
+
         iterate(p, strategy, result)
-    
+
         return result
     }
 
     private prepareSql(sql: string, params: Record<string, any>): string {
-        const flattenedParams = this.flattenParams(params)        
+        const flattenedParams = this.flattenParams(params)
         const paramsRegex = /(([:@$])([\w\d]*))/g
-        
+
         const preparedSql = Array.from(sql.matchAll(paramsRegex)).reduce(
             (acc, [_, match, prefix, name]) => {
                 const replacement = flattenedParams[name]
@@ -97,7 +97,7 @@ export class SqlDataService {
         ) {
             const columns = result[0].columns
             const values = result[0].values
-            
+
             return values.map(
                 row => {
                     return row.reduce(
@@ -121,7 +121,7 @@ export class SqlDataService {
             throw new Error(`SQL Error: ${err}`)
         }
     }
-    
+
 
     async query(sql: string, params: Record<string, any>): Promise<SqlResult> {
         if (this.config.active) {
@@ -167,14 +167,16 @@ export class SqlDataService {
             return objResult
         }
         const mixedResult = Object.assign([], sqlResult, objResult)
-        
+
         return mixedResult
     }
 
     async save(): Promise<void> {
-        const dataPath = this.fileUtils.fullPath(this.config.pathToFile)
-        const data = this.sqliteDatabase.export()
-        const buffer = Buffer.from(data)
-        await this.fileUtils.writeBuffer(buffer, dataPath)
+        if (this.config.active) {
+            const dataPath = this.fileUtils.fullPath(this.config.pathToFile)
+            const data = this.sqliteDatabase.export()
+            const buffer = Buffer.from(data)
+            await this.fileUtils.writeBuffer(buffer, dataPath)
+        }
     }
 }
