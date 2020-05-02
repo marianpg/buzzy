@@ -6,32 +6,31 @@ export const ErrorBannerTemplate = `
 		* {
 			line-height: 1.6;
 			box-sizing: border-box;
-			font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 		}
 		#banner {
-			position: fixed;
 			top: 0;
 			left: 0;
 			width: 100%;
-			height: 2.5em;
-			padding: 0 0.5em;
-			color: white;
-			background-color: #dc3546ad;
+			height: 40px;
+			padding: 0 8px;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+			font-size: 11pt;
+			position: fixed;
+			color: white;
+			background-color: #dc3546ad;
 		}
 		#banner span {
-			font-size: 11pt;
 			font-weight: bold;
 		}
-		#toggle-error {
-			
-		}
 		#display-error {
+            font-size: 11pt;
+            color: black;
 			background-color: white;
-			padding: 1em;
-			margin-top: 2.5em;
+			padding: 16px;
+			margin-top: 40px;
 			border: 4px dashed #dc3546ad;
 		}
 		#display-error h1 {
