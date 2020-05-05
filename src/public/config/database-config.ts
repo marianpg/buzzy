@@ -1,6 +1,6 @@
 'use strict'
 
-import { FrontmatterType } from "../frontmatter";
+import { FrontmatterType } from '../frontmatter'
 
 
 export interface GlobalDataConfig {

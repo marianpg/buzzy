@@ -77,3 +77,8 @@ export {
     Route,
     DefaultMethod
 } from './public'
+
+
+// TODO: fileExtension: 'ts'
+// TODO: angelegte, aber leere global.json wirft unleserlichen Fehler
+// TODO: Fehlermeldungen ausschaltbar, aber mit Möglichkeit diese in Datei zu schreiben.

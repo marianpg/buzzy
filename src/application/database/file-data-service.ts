@@ -1,13 +1,13 @@
 'use strict'
 
-import { FileDataConfig } from "../../public/config/database-config"
+import { FileDataConfig } from '../../public/config/database-config'
 import { Database as IDatabase, JsonData } from '../../public/database'
 
-import { Logging } from "../logging"
-import { FileUtils } from "../filesystem-utils"
-import { JsonDataFiles } from "./types"
-import { SqlDataService } from "./sql-data-service"
-import { isDefined } from "../helper"
+import { Logging } from '../logging'
+import { FileUtils } from '../filesystem-utils'
+import { JsonDataFiles } from './types'
+import { SqlDataService } from './sql-data-service'
+import { isDefined } from '../helper'
 
 
 

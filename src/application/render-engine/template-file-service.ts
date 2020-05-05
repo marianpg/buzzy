@@ -1,12 +1,12 @@
 'use strict'
 
-import { FileUtils } from "../filesystem-utils"
-import { TemplatingConfig } from "../../public/config"
-import { RouteException } from "../exception"
-import { Frontmatter, PageData, FrontmatterType } from "../../public/frontmatter"
-import { DatabaseService } from "../database"
-import { FrontmatterService } from "./frontmatter-service"
-import { isDefined } from "../helper"
+import { FileUtils } from '../filesystem-utils'
+import { TemplatingConfig } from '../../public/config'
+import { RouteException } from '../exception'
+import { Frontmatter, PageData, FrontmatterType } from '../../public/frontmatter'
+import { DatabaseService } from '../database'
+import { FrontmatterService } from './frontmatter-service'
+import { isDefined } from '../helper'
 
 export enum TemplateType {
     PAGE,
@@ -58,10 +58,10 @@ export class TemplateFileService {
     async build(filepath: string, type: TemplateType, parentFrontmatter: Frontmatter): Promise<TemplateFile> {
         switch (type) {
             case TemplateType.PAGE:
-                filepath = this.fileUtils.join('pages', filepath)
+                filepath = this.fileUtils.join(this.config.paths.pages, filepath)
                 break
             case TemplateType.TEMPLATE:
-                filepath = this.fileUtils.join('templates', filepath)
+                filepath = this.fileUtils.join(this.config.paths.templates, filepath)
                 break
         }
         const file = await this.readFile(filepath)

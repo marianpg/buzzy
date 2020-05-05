@@ -1,6 +1,6 @@
 'use strict'
 
-import { JsonData } from "../../public/database"
+import { JsonData } from '../../public/database'
 
 
 export type Filename = string

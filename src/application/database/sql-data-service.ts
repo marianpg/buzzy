@@ -1,14 +1,14 @@
 'use strict'
 
-import { SqlDataConfig } from "../../public/config/database-config"
-import { Database as IDatabase, ResultType, AllResultTypes } from "../../public/database"
+import { SqlDataConfig } from '../../public/config/database-config'
+import { Database as IDatabase, ResultType, AllResultTypes } from '../../public/database'
 
 const InitSqlJs = require('sql.js')
 const escapeSqlString = require('sql-string-escape')
 
-import { Logging } from "../logging"
-import { FileUtils } from "../filesystem-utils"
-import { hasKeys, isDefined } from "../helper"
+import { Logging } from '../logging'
+import { FileUtils } from '../filesystem-utils'
+import { hasKeys, isDefined } from '../helper'
 
 type SqlDriverResult = {
     columns: string[],
@@ -30,7 +30,7 @@ export class SqlDataService {
     private async _build(): Promise<void> {
         const dataPath = this.fileUtils.fullPath(this.config.pathToFile)
 
-        const SQL = await InitSqlJs();
+        const SQL = await InitSqlJs()
         const filebuffer = await this.fileUtils.readBuffer(dataPath)
         this.sqliteDatabase = new SQL.Database(filebuffer)
     }

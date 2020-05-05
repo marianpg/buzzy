@@ -1,6 +1,6 @@
 'use strict'
 
-import { RoutingConfig } from '../../public/config'
+import { Config } from '../../public/config'
 import {
     Route,
     StaticRoute,
@@ -51,15 +51,15 @@ export class ResponseService {
     private controllerService: ControllerService
 
     constructor(
-        private config: RoutingConfig,
+        private config: Config,
         private logging: Logging,
         private fileUtils: FileUtils,
         private renderEngine: RenderEngine,
         private validator: Validator,
         private databaseService: DatabaseService
     ) {
-        this.htmlService = new HtmlService(this.config, this.logging, this.fileUtils, this.renderEngine, this.validator)
-        this.controllerService = new ControllerService(this.config, this.logging, this.fileUtils)
+        this.htmlService = new HtmlService(this.config.routing, this.logging, this.fileUtils, this.renderEngine, this.validator)
+        this.controllerService = new ControllerService(this.config.templating, this.logging, this.fileUtils)
     }
 
     async build(): Promise<ResponseService> {
@@ -164,7 +164,7 @@ export class ResponseService {
     }
 
     async serveController(route: ControllerRoute, globalData: GlobalData, request: RequestData, session: Session): Promise<Response> {
-        if (this.config.reloadOnEveryRequest) {
+        if (this.config.routing.reloadOnEveryRequest) {
             this.controllerService = await this.controllerService.build()
         }
 

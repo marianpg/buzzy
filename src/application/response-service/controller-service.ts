@@ -1,6 +1,6 @@
 'use strict'
 
-import { RoutingConfig } from '../../public/config'
+import { RoutingConfig, TemplatingConfig } from '../../public/config'
 import { ControllerRoute } from '../../public/route'
 import { ControllerFunction, ControllerResult, TextResult, JsonResult, RedirectResult, PageResult, FragmentResult } from '../../public/controller'
 import { GlobalData } from '../../public/global'
@@ -47,7 +47,7 @@ export class ControllerService {
     private allController: DynamicModule<ControllerFunction>[]
 
     constructor(
-        private config: RoutingConfig,
+        private config: TemplatingConfig,
         private logging: Logging,
         private fileUtils: FileUtils
     ) {
@@ -55,7 +55,7 @@ export class ControllerService {
     }
 
     async build(): Promise<ControllerService> {
-        this.allController = await this.moduleLoader.openModules(parseControllerFunction, 'controller')
+        this.allController = await this.moduleLoader.openModules(parseControllerFunction, this.config.paths.controller)
         return this
     }
 

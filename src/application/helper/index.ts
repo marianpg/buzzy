@@ -15,7 +15,7 @@ export const isFunction = (functionToCheck) => {
 }
 
 export const isAsyncFunction = (functionToCheck) => {
-    return functionToCheck && functionToCheck.constructor.name === "AsyncFunction"
+    return functionToCheck && functionToCheck.constructor.name === 'AsyncFunction'
 }
 
 export const isPromise = (p?: any) => isDefined(p) && isDefined(p.then) && isFunction(p.then)
