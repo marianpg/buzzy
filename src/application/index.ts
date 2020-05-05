@@ -50,7 +50,7 @@ export class Application {
             request
         )
         const responseService = await new ResponseService(
-            this.config.routing,
+            this.config,
             this.logService.create('routing', this.config.routing.logging),
             this.fileUtils,
             renderEngine, validator, databaseService
