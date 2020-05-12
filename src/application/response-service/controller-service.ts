@@ -61,7 +61,7 @@ export class ControllerService {
 
     async callController(
         route: ControllerRoute,
-        global: GlobalData,
+        globalData: GlobalData,
         request: RequestData,
         session: Session,
         database: Database
@@ -78,6 +78,6 @@ export class ControllerService {
             throw new Error(`Can not call function "${route.controller.function}" in Controller File "${route.controller.file}". Did you forget to export or to define the function?`)
         }
 
-        return _function(global, request, session, database)
+        return _function(globalData, request, session, database)
     }
 }
