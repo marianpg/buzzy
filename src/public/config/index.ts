@@ -14,11 +14,11 @@ export { DefaultConfig } from './default-config'
 export { Language, Languages } from './languages'
 export { LoggingType, LoggingTypes } from './logging-types'
 export { ServerConfig } from './server-config'
-export { RoutingConfig, RoutingFileExtension, RoutingFileExtensions } from './routing-config'
+export { RoutingConfig,
+    RoutingFileExtension, RoutingFileExtensions } from './routing-config'
 export { TemplatingConfig } from './templating-config'
 export { SessionsConfig } from './sessions-config'
 export { DatabaseConfig } from './database-config'
-
 
 
 export interface Config {

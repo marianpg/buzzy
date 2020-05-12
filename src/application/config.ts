@@ -13,8 +13,6 @@ import {
 
 import { isDefined, isArray } from './helper'
 
-// TODO: verify user-specified string input
-
 const decide = (toVerify: any, _default: any): any => {
     return isDefined(toVerify) ? toVerify : _default
 }

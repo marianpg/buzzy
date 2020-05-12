@@ -61,15 +61,25 @@ export class RenderEngine {
             return new this.hbs.SafeString(contentHtml)
         })
 
-        this.hbs.registerHelper('include', async (fname) => {
-            if (isDefined(fname)) {
-                const templateHtml = await this._renderTemplate(fname, frontmatter)
-                return new this.hbs.SafeString(templateHtml)
-            } else {
-                this.logging.warn(`there is a include-helper without a specified filename in ${file.getName()}. Did you miss to put the filename in quotation marks, like in {{ include "fragment" }} ?`)
+        const makeIncludeHelper = (that, file) => {
+            return async function() {
+                const args = Array.from(arguments)
+                const context = args.pop()
+                const fragment = args.shift()
+
+                if (isDefined(fragment)) {
+                    const fragmentFrontmatter = args.length > 0
+                        ? FrontmatterService.Merge(frontmatter, args.shift())
+                        : frontmatter
+                    const templateHtml = await that._renderTemplate(fragment, fragmentFrontmatter)
+                    return new that.hbs.SafeString(templateHtml)
+                } else {
+                    that.logging.warn(`there is a include-helper without a specified filename in ${file.getName()}. Did you miss to put the filename in quotation marks, like in {{ include "fragment" }} ?`)
                 return ''
+                }
             }
-        })
+        }
+        this.hbs.registerHelper('include', makeIncludeHelper(this, file))
 
         let templateName = null
         if (isDefined(frontmatter.page.template)) {

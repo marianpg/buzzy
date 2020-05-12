@@ -1,12 +1,16 @@
 'use strict'
 
 import { Config } from '.'
+import { Languages } from './languages'
+import { FrontmatterTypes } from '../frontmatter'
+import { LoggingTypes } from './logging-types'
+import { RoutingFileExtensions } from './routing-config'
 
 
 export const DefaultConfig: Config = {
     rootPath: process.cwd(),
-    language: 'de',
-    loggingActive: ['info', 'data', 'warn', 'error', 'debug'],
+    language: Languages.DE,
+    loggingActive: [LoggingTypes.INFO, LoggingTypes.DATA, LoggingTypes.WARN, LoggingTypes.ERROR],
     server: {
         host: 'localhost',
         port: 8080,
@@ -15,7 +19,7 @@ export const DefaultConfig: Config = {
     routing: {
         magic: false,
         fileName: 'routes',
-        fileExtension: 'json',
+        fileExtension: RoutingFileExtensions.JSON,
         reloadOnEveryRequest: true,
         logging: true
     },
@@ -28,7 +32,7 @@ export const DefaultConfig: Config = {
             controller: 'controller'
         },
         allowedExtensions: ['html', 'hbs'],
-        frontmatterFormat: 'json',
+        frontmatterFormat: FrontmatterTypes.JSON,
         helpers: {
             reloadOnEveryRequest: true,
         },
@@ -44,14 +48,14 @@ export const DefaultConfig: Config = {
             active: true,
             reloadOnEveryRequest: true,
             pathToFile: './global.json',
-            format: 'json',
+            format: FrontmatterTypes.JSON,
             logging: true
         },
         fileData: {
             active: false,
             reloadOnEveryRequest: true,
             path: './data',
-            format: 'json',
+            format: FrontmatterTypes.JSON,
             logging: true
         },
         sqliteData: {

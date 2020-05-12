@@ -8,7 +8,6 @@ export enum RoutingFileExtensions {
 
 export type RoutingFileExtension = 'json' | 'ts'
 
-
 export interface RoutingConfig {
     magic: boolean
     fileName: string

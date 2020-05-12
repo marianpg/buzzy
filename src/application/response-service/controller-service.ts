@@ -78,6 +78,12 @@ export class ControllerService {
             throw new Error(`Can not call function "${route.controller.function}" in Controller File "${route.controller.file}". Did you forget to export or to define the function?`)
         }
 
-        return _function(globalData, request, session, database)
+        const dataArgument = {
+            request,
+            session: session.getData(),
+            global: globalData
+        }
+
+        return _function(dataArgument, database, session)
     }
 }

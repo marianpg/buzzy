@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = {
-    list: (global, request, session, database) => {
+    list: (data, database, session) => {
         const persons = database.loadJson('persons.json') || []
 
         return {
@@ -12,7 +12,7 @@ module.exports = {
             }
         }
     },
-    add: (global, request, session, database) => {
+    add: (data, database, session) => {
         const persons = database.loadJson('persons') || []
         const person = {
             firstname: "Marie",

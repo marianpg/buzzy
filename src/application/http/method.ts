@@ -1,13 +1,13 @@
 'use strict'
 
-import { RequestMethod } from '../../public/request'
+import { RequestMethod, RequestMethods } from '../../public/request'
 
 import { isDefined } from '../helper'
 
 
 export { RequestMethod as Method } from '../../public/request'
 
-export const AllMethods: RequestMethod[] = Object.values(RequestMethod)
+export const AllMethods: RequestMethod[] = Object.values(RequestMethods)
 
 export const parseMethod = (method: string): RequestMethod => {
     const m = AllMethods.find(aMethod => aMethod === method.toLowerCase())

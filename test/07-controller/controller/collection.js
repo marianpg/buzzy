@@ -1,18 +1,18 @@
 'use strict'
 
 module.exports = {
-    empty: (global, request, session, database) => {
+    empty: (data, database, session) => {
         return {
             status: 200
         }
     },
-    text: (global, request, session, database) => {
+    text: (data, database, session) => {
         return {
             status: 200,
             text: 'yay'
         }
     },
-    json: (global, request, session, database) => {
+    json: (data, database, session) => {
         return {
             status: 200,
             json: {
@@ -20,13 +20,13 @@ module.exports = {
             }
         }
     },
-    redirect: (global, request, session, database) => {
+    redirect: (data, database, session) => {
         return {
             status: 307,
             redirect: 'https://www.reddit.com/r/funny/'
         }
     },
-    page: (global, request, session, database) => {
+    page: (data, database, session) => {
         return {
             status: 200,
             page: 'index',
@@ -35,7 +35,7 @@ module.exports = {
             }
         }
     },
-    fragment: (global, request, session, database) => {
+    fragment: (data, database, session) => {
         return {
             status: 200,
             fragment: 'snippet',
@@ -44,7 +44,7 @@ module.exports = {
             }
         }
     },
-    promise: (global, request, session, database) => {
+    promise: (data, database, session) => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve({
@@ -54,7 +54,7 @@ module.exports = {
             }, 2500)
         })
     },
-    "promise-2": async (global, request, session, database) => {
+    "promise-2": async (data, database, session) => {
         const wait = new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve()
