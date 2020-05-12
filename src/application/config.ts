@@ -2,8 +2,8 @@
 
 import {
     Config, DefaultConfig,
-    Languages,
-    LoggingTypes,
+    Language, Languages,
+    LoggingType, LoggingTypes,
     ServerConfig,
     RoutingConfig,
     TemplatingConfig,
@@ -13,6 +13,8 @@ import {
 
 import { isDefined, isArray } from './helper'
 
+// TODO: verify user-specified string input
+
 const decide = (toVerify: any, _default: any): any => {
     return isDefined(toVerify) ? toVerify : _default
 }
@@ -21,20 +23,20 @@ const parseRootPath = (toVerify: any, _default: string): string => {
     return decide(toVerify, _default)
 }
 
-const parseLanguage = (toVerify: any, _default: Languages): Languages => {
+const parseLanguage = (toVerify: any, _default: Language): Language => {
     return isDefined(toVerify)
         ? Object.values(Languages).find(lang => toVerify === lang) || _default
         : _default
 }
 
-const isOneOfLogging = (toVerify: any, _default: LoggingTypes[]): boolean => {
+const isOneOfLogging = (toVerify: any, _default: LoggingType[]): boolean => {
     // TODO possible Optimization with Logging[toVerify]
     return isDefined(Object.values(LoggingTypes).find(log => toVerify === log))
 }
 
-const parseLoggingActive = (toVerify: any, _default: LoggingTypes[]): LoggingTypes[] => {
+const parseLoggingActive = (toVerify: any, _default: LoggingType[]): LoggingType[] => {
     return isDefined(toVerify) && isArray(toVerify)
-        ? toVerify.reduce<LoggingTypes[]>(
+        ? toVerify.reduce<LoggingType[]>(
             (acc, log) => {
                 if (isOneOfLogging(log, _default)) {
                     acc.push(log)

@@ -13,7 +13,7 @@ export const parseMethod = (method: string): RequestMethod => {
     const m = AllMethods.find(aMethod => aMethod === method.toLowerCase())
 
     if (!isDefined(m)) {
-        throw new Error('Ciritcal Error - could not extrat HTTP Method from request.')
+        throw new Error(`Ciritcal Error - could not extrat HTTP Method "${method}" from request.`)
     }
 
     return m

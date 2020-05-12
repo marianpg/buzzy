@@ -16,11 +16,11 @@ export enum RequestMethod {
 }
 
 export interface RequestData {
-    query: RequestQuery
-    body: RequestBody
-    params: RequestParams
+    get: RequestQuery
+    post: RequestBody
+    path: RequestParams
     method: RequestMethod
-    path: string
+    url: string
     originalUrl: string
     ip: string
     headers: RequestHeaders
