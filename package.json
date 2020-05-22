@@ -1,6 +1,6 @@
 {
     "name": "buzzy",
-    "version": "1.0.11",
+    "version": "1.0.12",
     "description": "A modular web server for rapid full-stack development.",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
